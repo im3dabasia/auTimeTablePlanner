@@ -1,6 +1,8 @@
 const express = require('express')
 const connectDB = require("./config/db");
 const userRouter = require("./routes/userRoute")
+const courseRouter = require('./routes/courseRoute');
+
 const cors=require("cors");
 
 connectDB();
@@ -26,9 +28,8 @@ app.get("/dashboard", function(req, res) {
     console.log("Student Home ")
 })
 
-// app.use("/api/auth", userRouter);
 app.use("/api", userRouter);
-
+app.use("/api", courseRouter);
 
 app.listen(5000, () => {
     console.log(`Server is running on port ${"5000"}`);

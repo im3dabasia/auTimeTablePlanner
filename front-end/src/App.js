@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import LandingPage from './pages/LandingPage.js';
 import Register from "./pages/Register.js";
 import Login from "./pages/Login.js"
+import Courses from "./pages/Courses.js";
 import './App.css'
 import './index.css'
 import DashBoard from "./pages/DashBoard.js";
@@ -16,6 +17,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<DashBoard/>} />
+        <Route path="/courseselection" element={<Courses/>} />
+
 
       </Routes>
       

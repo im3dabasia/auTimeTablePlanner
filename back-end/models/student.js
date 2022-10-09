@@ -17,9 +17,17 @@ const StudentSchema = new mongoose.Schema({
 
   passWord:{
     type:String,
-    required:false,
+    required:true,
     min:8,
     max:16
+    
+  },
+
+  coursesSelected:{
+    type:Array,
+    default:[],
+    required:false
+
   }
 
 });

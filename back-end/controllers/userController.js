@@ -2,25 +2,30 @@ const StudentModel = require("../models/student.js");
 const bcrypt = require('bcrypt');
 
 const registerUser = async (req, res) => {
-    let { rollNum, name, passWord } = await req.body;
-    rollNum = parseInt(rollNum,10)
+    let { rollNum,
+        name,
+        passWord } = await req.body;
+
+    rollNum = parseInt(rollNum, 10)
 
     const checkUserPreExists = await StudentModel.exists({ rollNum });
 
     const objectToSend = {
         userExists: checkUserPreExists,
-        nextPage:false
+        nextPage: false
+        
     }
     if (checkUserPreExists) {
-        
+
         return res.status(200).json(objectToSend)
 
-    }else{
+    } else {
 
         const tempObj = {
             rollNum,
             name,
             passWord
+
         }
 
 
@@ -28,10 +33,10 @@ const registerUser = async (req, res) => {
             rollNum,
             name,
             passWord
+
         })
 
         delete tempObj.passWord;
-
         objectToSend.userDetails = tempObj
         objectToSend.nextPage = true;
 
@@ -41,14 +46,17 @@ const registerUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-    let { rollNum, passWord } = await req.body;
 
-    rollNum = await parseInt(rollNum,10);
+    let { rollNum,
+        passWord } = await req.body;
 
-    
+    rollNum = await parseInt(rollNum, 10);
+
+
     const oldUser = {
         rollNum,
         passWord
+
     }
 
     delete oldUser.passWord
@@ -58,7 +66,8 @@ const loginUser = async (req, res) => {
         passWordCorrect: false,
         userExists: false,
         userDetails: oldUser,
-        nextPage:false
+        nextPage: false
+
     }
 
     const rollNumCheckInDB = await StudentModel.exists({ rollNum });
