@@ -6,5 +6,4 @@ const courseRouter  = express.Router();
 courseRouter.get("/courseselection", pushCourses);
 courseRouter.post("/courseselection", coursesSelected);
 
-
 module.exports = courseRouter;

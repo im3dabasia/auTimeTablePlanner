@@ -4,12 +4,14 @@ const CourseSchema = new mongoose.Schema({
   courseName:{
     type:String,
     required: true,
+    unique:true
 
   },
   courseId:{
     type:String,
-    required:true
-    
+    required:true,
+    unique:true
+      
   },
   courseTime:{
     type:String,
@@ -31,7 +33,8 @@ const CourseSchema = new mongoose.Schema({
 
   },
   courseDescription:{
-    type:String
+    type:String,
+    unique:true
 
   },
   courseFaculty:{
@@ -42,8 +45,6 @@ const CourseSchema = new mongoose.Schema({
 
 });
 
-
 const CourseModel = mongoose.model("CourseModel", CourseSchema);
-
 
 module.exports =  CourseModel;

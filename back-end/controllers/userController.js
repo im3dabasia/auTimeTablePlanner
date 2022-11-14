@@ -15,11 +15,13 @@ const registerUser = async (req, res) => {
         nextPage: false
         
     }
+
     if (checkUserPreExists) {
 
         return res.status(200).json(objectToSend)
 
-    } else {
+    } 
+    else {
 
         const tempObj = {
             rollNum,
@@ -27,7 +29,6 @@ const registerUser = async (req, res) => {
             passWord
 
         }
-
 
         const newUser = await StudentModel.create({
             rollNum,
@@ -43,6 +44,7 @@ const registerUser = async (req, res) => {
     }
 
     return res.status(200).json(objectToSend)
+
 }
 
 const loginUser = async (req, res) => {
@@ -79,7 +81,7 @@ const loginUser = async (req, res) => {
 
     const userExists = rollNumCheckInDB && await StudentModel.exists({ rollNum, passWord })
 
-    if (rollNumCheckInDB) {
+    if (rollNumCheckInDB === true) {
 
         if (userExists) {
             objectToSend.userExists = true;
@@ -96,4 +98,6 @@ const loginUser = async (req, res) => {
     res.status(200).json({ objectToSend })
 
 }
+
 module.exports = { registerUser, loginUser };
+

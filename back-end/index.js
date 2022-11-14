@@ -2,35 +2,33 @@ const express = require('express')
 const connectDB = require("./config/db");
 const userRouter = require("./routes/userRoute")
 const courseRouter = require('./routes/courseRoute');
+const calendarRouter = require('./routes/calendarRoute')
 
-const cors=require("cors");
-
+// Connect to local DB
 connectDB();
 
+// App setup
 const app = express();
 
+// Communicate with backend
+const cors=require("cors");
 const corsOptions ={
     origin:'*', 
-    credentials:true,            //access-control-allow-credentials:true
+    credentials:true,
     optionSuccessStatus:200,
 }
 
+// Middlewares
 app.use(cors(corsOptions))
 app.use(express.json())
 
-
-app.get("/", function(req, res) {
-    res.send("home page")
-})
-
-app.get("/dashboard", function(req, res) {
-    res.send("Welcome to student page")
-    console.log("Student Home ")
-})
-
+// Subrouters
 app.use("/api", userRouter);
 app.use("/api", courseRouter);
+app.use("/api", calendarRouter);
+
 
 app.listen(5000, () => {
     console.log(`Server is running on port ${"5000"}`);
+    
 });
