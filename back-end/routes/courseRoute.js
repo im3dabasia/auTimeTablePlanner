@@ -1,9 +1,22 @@
 const express = require("express")
-const {  coursesSelected, pushCourses} = require("../controllers/courseController");
+const { pushCourses,
+        coursesChosen,
+        sendRollNumber,
+        deleteCourse,
+        viewCourse,
+        editCourse} = require("../controllers/courseController");
 
 const courseRouter  = express.Router();
 
-courseRouter.get("/courseselection", pushCourses);
-courseRouter.post("/courseselection", coursesSelected);
+courseRouter.post("/courseselection", pushCourses);
+courseRouter.post("/courseselection/rollnumber", sendRollNumber);
+courseRouter.get("/courseselection", coursesChosen);
+courseRouter.get("/courseselection/id/:id", viewCourse);
+courseRouter.patch("/courseselection/id/:id", editCourse);
+
+courseRouter.delete("/courseselection/id/:id", deleteCourse);
+// courseRouter.get("/courseselection", coursesChosen);
+
+
 
 module.exports = courseRouter;

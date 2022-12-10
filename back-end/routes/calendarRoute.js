@@ -1,10 +1,13 @@
 const express = require("express")
-const { studentRollNumberInfo, studentCalendarInfo} = require("../controllers/calendarController");
+const { studentCalendarInfo,
+        sendRollNumber} = require("../controllers/calendarController");
 
 const calendarRouter  = express.Router();
 
 calendarRouter.get("/dashboard", studentCalendarInfo);
-calendarRouter.post("/dashboard", studentRollNumberInfo);
+// calendarRouter.post("/dashboard", studentRollNumberInfo);
+calendarRouter.post("/dashboard/rollnumber", sendRollNumber);
+
 
 
 module.exports = calendarRouter;

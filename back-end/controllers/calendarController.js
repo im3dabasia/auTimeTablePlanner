@@ -1,6 +1,6 @@
-const ClassModel = require("../models/class.js");
+const CourseModel = require("../models/course.js");
 
-let loggedInRollNumber = 33333333;
+let loggedInRollNumber = 0;
 
     // const data = await ClassModel.findOne({rollNum : loggedInRollNumber})
     // console.log((data.coursesSelected))
@@ -8,22 +8,21 @@ let loggedInRollNumber = 33333333;
 const studentCalendarInfo = async (req, res) => {
 
     console.log(loggedInRollNumber)
-    let data = await ClassModel.findOne({rollNum : loggedInRollNumber})
+    let data = await CourseModel.find({studentRollNum : loggedInRollNumber})
+    console.log("1",data)
 
-    
-    data = (data.coursesSelected)
-    if(data){
+    if(data != null ){
 
-      for(let i = 0; i < data.length; i++ ){
-        console.log(data[i][0]);
-      }
+      return res.status(200).json(data)
     }
 
-    return res.status(200).json(data)
+    return res.status(200).json({"NO DATA":"NO DATA"})
+
+
 
 }
 
-const studentRollNumberInfo = async (req, res) => {
+const sendRollNumber = async (req, res) => {
 
     const data = await req.body
     loggedInRollNumber = data.rollNum
@@ -32,4 +31,5 @@ const studentRollNumberInfo = async (req, res) => {
 
 }
 
-module.exports = {studentRollNumberInfo, studentCalendarInfo };
+
+module.exports = {studentCalendarInfo, sendRollNumber };

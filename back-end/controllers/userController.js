@@ -1,13 +1,15 @@
 const StudentModel = require("../models/student.js");
 const bcrypt = require('bcrypt');
 
+let studentRollNumber = 0
 const registerUser = async (req, res) => {
     let { rollNum,
         name,
         passWord } = await req.body;
 
     rollNum = parseInt(rollNum, 10)
-
+    studentRollNumber  = rollNum
+ 
     const checkUserPreExists = await StudentModel.exists({ rollNum });
 
     const objectToSend = {
@@ -53,7 +55,10 @@ const loginUser = async (req, res) => {
         passWord } = await req.body;
 
     rollNum = await parseInt(rollNum, 10);
+    studentRollNumber  = rollNum
 
+    console.log(studentRollNumber, typeof(studentRollNumber))
+    console.log(passWord, typeof(passWord))
 
     const oldUser = {
         rollNum,
@@ -73,7 +78,6 @@ const loginUser = async (req, res) => {
     }
 
     const rollNumCheckInDB = await StudentModel.exists({ rollNum });
-
     if (rollNumCheckInDB) {
         objectToSend.userRollNumberExists = true;
 
@@ -81,7 +85,7 @@ const loginUser = async (req, res) => {
 
     const userExists = rollNumCheckInDB && await StudentModel.exists({ rollNum, passWord })
 
-    if (rollNumCheckInDB === true) {
+    if (rollNumCheckInDB) {
 
         if (userExists) {
             objectToSend.userExists = true;
@@ -99,5 +103,5 @@ const loginUser = async (req, res) => {
 
 }
 
-module.exports = { registerUser, loginUser };
+module.exports = { registerUser, loginUser, studentRollNumber};
 

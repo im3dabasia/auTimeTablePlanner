@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
 const CourseSchema = new mongoose.Schema({
+  studentRollNum:{
+    type:Number,
+    required: true,
+    unique:false
+
+  },
   courseName:{
     type:String,
     required: true,
-    unique:true
+    unique:false
 
-  },
-  courseId:{
-    type:String,
-    required:true,
-    unique:true
-      
   },
   courseTime:{
     type:String,
@@ -19,14 +19,14 @@ const CourseSchema = new mongoose.Schema({
 
   },
   courseWeeklyFirstLec:{
-    type:Number,
+    type:String,
     required:true,
     min:0,
     max:4
 
   },
   courseWeeklySecondLec:{
-    type:Number,
+    type:String,
     required:true,
     min:0,
     max:4
@@ -34,12 +34,12 @@ const CourseSchema = new mongoose.Schema({
   },
   courseDescription:{
     type:String,
-    unique:true
+    unique:false
 
   },
   courseFaculty:{
     type:String,
-    required:true
+    required:false
 
   }
 

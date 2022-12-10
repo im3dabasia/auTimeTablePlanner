@@ -3,24 +3,27 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
-
+import FullCalendar from '@fullcalendar/react' 
+import dayGridPlugin from '@fullcalendar/daygrid'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import { INITIAL_EVENTS } from './event-utils'
 
 const DashBoard = () => {
   const Navigate = useNavigate();
-  const [data,setData] = useState({})
-  const [data1,setData1] = useState([])
 
+  // helper functions
+  const [coursesBucket, setCoursesBucket] = useState([])
+  const [events, setEvents] = useState([])
 
-  const numToWeek = {
-    0:"Monday",
-    1:"Tuesday",
-    2:"Wednesday",
-    3:"Thursday",
-    4:"Friday",
-    5:"Saturday",
-    6:"Sunday"
+  const day2Num = {
+    "Monday": 0,
+    "Tuesday": 1,
+    "Wednesday": 2,
+    "Thursday": 3,
+    "Friday": 4,
+    "Saturday": 5,
+    "Sunday": 6
 
   }
 
@@ -33,27 +36,18 @@ const DashBoard = () => {
         console.log(error);
       });
 
-      setData(tempData.data[0])
-      if(data){
-
-        for(let i = 0; i < data.length; ){
-          console.log("+++++++++")
-          console.log(data[i]);
-          console.log("++++++++++++++")
-        }
-      }
+    setCoursesBucket(tempData.data)
   }
 
 
   const postRollNumDetails = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     const rollNum = JSON.parse(localStorage.getItem('STTP-user'))
-    console.log(rollNum.rollNum)
     const obj = {
       rollNum: rollNum.rollNum
     }
 
-    const data = await axios.post('http://www.localhost:5000/api/dashboard', obj)
+    const data = await axios.post('http://www.localhost:5000/api/dashboard/rollnumber', obj)
       .then(function (response) {
         return response;
       })
@@ -66,52 +60,71 @@ const DashBoard = () => {
     alert(arg)
     console.log(arg)
   }
-  const sendRollNumberInfo= async () =>{
 
-    await postRollNumDetails()
+  const eventsSetup = () => {
+    let eventsList = coursesBucket.map((course) => {
+      return {
+        timeZone: 'UTC',
+
+        title: course.courseName + " " +course.courseTime,
+        start: '2022-08-01',
+        end: '2022-12-01',
+        daysOfWeek: [day2Num[course.courseWeeklyFirstLec], day2Num[course.courseWeeklySecondLec]],
+        Duration: '01:30:00'
+      }
+    })
+    // setEvents(INITIAL_EVENTS(coursesBucket))
+    console.log(eventsList)
+    setEvents(eventsList)
+    return eventsList;
+
   }
 
-  useEffect( () => {
-    console.log(data)
 
-
-  }, [ data])
-
-
-  useEffect( () => {
-
-
-    sendRollNumberInfo()
+  useEffect(() => {
+    postRollNumDetails()
     getData();
+    const currUser = JSON.parse(localStorage.getItem('STTP-user'))
 
-    // const currUser = JSON.parse(localStorage.getItem('STTP-user'))
+    if (!currUser) {
+      Navigate("/login")
+    }
 
-    // if(!currUser){
-    //   Navigate("/login")
-    // }
+  }, [])
 
-  }, [ ])
+  useEffect(() => {
+    eventsSetup();
+
+  }, [coursesBucket])
 
   return (
     <div className='w-screen	h-screen flex justify-center	items-center flex-col'>
 
       <div className="w-1/2 ">
         <FullCalendar className="overflow-y-clip"
-          plugins={[dayGridPlugin]}
-          initialView="dayGridMonth"
-          dateClick={handleDateClick}
-          events={[
-            { title: 'Database Management Systems', date: '2022-10-07' },
-            { title: 'event 2', date: '2022-10-07' },
-            { title: 'event 1', date: '2022-10-07' },
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView="timeGridWeek"
+          // dateClick={handleDateClick}
+          events={events}
+          slotMinTime={'08:00:00'}
+          slotMaxTime={'20:00:00'}
+          // initialEvents={INITIAL_EVENTS}
 
-          ]}
+          slotDuration={'01:30:00'} 
+          // allDaySlot = {false}
+
         />
-
-
+        {console.log(events)}
       </div>
     </div>
   )
 }
 
 export default DashBoard
+
+// initialView: 'timeGridWeek',

@@ -20,11 +20,13 @@ const Login = () => {
 
       const {data} = await axios.post('http://www.localhost:5000/api/login', obj)
         .then(function (response) {
+          console.log(response)
           return response;
         })
         .catch(function (error) {
           console.log(error);
         });
+        console.log(data)
         
         const {userRollNumberExists, passWordCorrect } = data.objectToSend
         
@@ -43,7 +45,6 @@ const Login = () => {
         localStorage.setItem('STTP-user',JSON.stringify(userData))
         
         navigate("/dashboard")
-
 
       } else {
         navigate("/login")

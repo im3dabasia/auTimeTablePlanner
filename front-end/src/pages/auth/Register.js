@@ -26,7 +26,7 @@ const Register = () => {
 
     if (rollNum.length !== 8) {
       console.log("Roll number wrong")
-      notify("roll number is not valid");
+      notify("roll number is not 8 digits long");
       return false
     }
     if (name.length === 0) {
@@ -37,7 +37,7 @@ const Register = () => {
 
       return false;
     }
-    if (passWord.length === 0 || passWord.length < 8) {
+    if (passWord.length === 0 || passWord.length < 4) {
       console.log("Password wrong")
 
       notify("password is not valid");
@@ -59,19 +59,24 @@ const Register = () => {
 
       const data = await axios.post('http://www.localhost:5000/api/register', obj)    
         .then(function (response) {
+          console.log(response)
           return response;
         })
         .catch(function (error) {
           console.log(error);
         });
+        console.log(data)
 
-        const newUserData = await data.data.userDetails
+        const newUserData =  await data.data.userDetails
 
       if (data.data.nextPage) {
 
         localStorage.setItem('STTP-user',JSON.stringify(newUserData))
-        
-        navigate("/dashboard")
+        if(data.data.userExists) {
+          navigate("/dashboard")
+        }else{
+          navigate("/courseselection")
+        }
 
       } else {
 

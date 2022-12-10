@@ -16,7 +16,7 @@ const StudentSchema = new mongoose.Schema({
   passWord:{
     type:String,
     required:true,
-    min:8,
+    min:4,
     max:16
     
   }
