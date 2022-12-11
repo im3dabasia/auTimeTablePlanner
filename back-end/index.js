@@ -27,8 +27,8 @@ app.use("/api", userRouter);
 app.use("/api", courseRouter);
 app.use("/api", calendarRouter);
 
-
+// Listening to port
 app.listen(5000, () => {
-    console.log(`Server is running on port ${"5000"}`);
-    
+    console.log(`Server is running on port ${"5000"}`); 
 });
+

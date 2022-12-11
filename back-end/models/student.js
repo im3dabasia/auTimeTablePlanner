@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const StudentSchema = new mongoose.Schema({
-
   name:{
     type:String,
     required: true,
@@ -17,12 +16,12 @@ const StudentSchema = new mongoose.Schema({
     type:String,
     required:true,
     min:4,
-    max:16
+    max:16 
     
   }
-
 });
 
 const StudentModel = mongoose.model("StudentModel", StudentSchema);
 
 module.exports =  StudentModel;
+

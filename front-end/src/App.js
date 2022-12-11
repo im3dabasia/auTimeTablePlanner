@@ -4,7 +4,6 @@ import LandingPage from './pages/LandingPage.js';
 import Register from "./pages/auth/Register.js";
 import Login from "./pages/auth/Login.js"
 import Courses from "./pages/Courses.js";
-import './App.css'
 import './index.css'
 import DashBoard from "./pages/DashBoard.js";
 
@@ -18,12 +17,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<DashBoard/>} />
         <Route path="/courseselection" element={<Courses/>} />
-
-
       </Routes>
-      
     </div>
   )
 }
 
 export default App;
+
+

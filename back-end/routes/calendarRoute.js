@@ -5,9 +5,7 @@ const { studentCalendarInfo,
 const calendarRouter  = express.Router();
 
 calendarRouter.get("/dashboard", studentCalendarInfo);
-// calendarRouter.post("/dashboard", studentRollNumberInfo);
 calendarRouter.post("/dashboard/rollnumber", sendRollNumber);
 
-
-
 module.exports = calendarRouter;
+

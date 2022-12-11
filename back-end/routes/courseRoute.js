@@ -13,10 +13,8 @@ courseRouter.post("/courseselection/rollnumber", sendRollNumber);
 courseRouter.get("/courseselection", coursesChosen);
 courseRouter.get("/courseselection/id/:id", viewCourse);
 courseRouter.patch("/courseselection/id/:id", editCourse);
-
 courseRouter.delete("/courseselection/id/:id", deleteCourse);
-// courseRouter.get("/courseselection", coursesChosen);
-
-
 
 module.exports = courseRouter;
+
+

@@ -8,64 +8,46 @@ const registerUser = async (req, res) => {
         passWord } = await req.body;
 
     rollNum = parseInt(rollNum, 10)
-    studentRollNumber  = rollNum
- 
+    studentRollNumber = rollNum
     const checkUserPreExists = await StudentModel.exists({ rollNum });
 
     const objectToSend = {
         userExists: checkUserPreExists,
         nextPage: false
-        
     }
-
     if (checkUserPreExists) {
-
         return res.status(200).json(objectToSend)
-
-    } 
-    else {
-
+    } else {
         const tempObj = {
             rollNum,
             name,
             passWord
 
         }
-
         const newUser = await StudentModel.create({
             rollNum,
             name,
             passWord
 
         })
-
         delete tempObj.passWord;
         objectToSend.userDetails = tempObj
         objectToSend.nextPage = true;
-
     }
-
     return res.status(200).json(objectToSend)
-
 }
 
 const loginUser = async (req, res) => {
-
     let { rollNum,
         passWord } = await req.body;
-
-    rollNum = await parseInt(rollNum, 10);
-    studentRollNumber  = rollNum
-
-    console.log(studentRollNumber, typeof(studentRollNumber))
-    console.log(passWord, typeof(passWord))
+    rollNum = parseInt(rollNum, 10);
+    studentRollNumber = rollNum
 
     const oldUser = {
         rollNum,
         passWord
 
     }
-
     delete oldUser.passWord
 
     const objectToSend = {
@@ -76,15 +58,12 @@ const loginUser = async (req, res) => {
         nextPage: false
 
     }
-
     const rollNumCheckInDB = await StudentModel.exists({ rollNum });
     if (rollNumCheckInDB) {
         objectToSend.userRollNumberExists = true;
 
     }
-
     const userExists = rollNumCheckInDB && await StudentModel.exists({ rollNum, passWord })
-
     if (rollNumCheckInDB) {
 
         if (userExists) {
@@ -100,8 +79,8 @@ const loginUser = async (req, res) => {
         }
     }
     res.status(200).json({ objectToSend })
-
 }
 
-module.exports = { registerUser, loginUser, studentRollNumber};
+module.exports = { registerUser, loginUser, studentRollNumber };
+
 

@@ -13,7 +13,12 @@ const CourseSchema = new mongoose.Schema({
     unique:false
 
   },
-  courseTime:{
+  courseStartTime:{
+    type:String,
+    required:true,
+
+  },
+  courseEndTime:{
     type:String,
     required:true,
 
@@ -42,9 +47,9 @@ const CourseSchema = new mongoose.Schema({
     required:false
 
   }
-
 });
 
 const CourseModel = mongoose.model("CourseModel", CourseSchema);
 
 module.exports =  CourseModel;
+

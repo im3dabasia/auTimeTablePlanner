@@ -7,7 +7,6 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS } from './event-utils'
 
 const DashBoard = () => {
   const Navigate = useNavigate();
@@ -24,7 +23,6 @@ const DashBoard = () => {
     "Friday": 4,
     "Saturday": 5,
     "Sunday": 6
-
   }
 
   const getData = async (req, res) => {
@@ -35,10 +33,9 @@ const DashBoard = () => {
       .catch(function (error) {
         console.log(error);
       });
-
+      // console.log(tempData.data)
     setCoursesBucket(tempData.data)
   }
-
 
   const postRollNumDetails = async (event) => {
     // event.preventDefault();
@@ -56,50 +53,37 @@ const DashBoard = () => {
       });
   }
 
-  let handleDateClick = (arg) => {
-    alert(arg)
-    console.log(arg)
-  }
-
   const eventsSetup = () => {
+    console.log(coursesBucket)
     let eventsList = coursesBucket.map((course) => {
       return {
-        timeZone: 'UTC',
-
-        title: course.courseName + " " +course.courseTime,
-        start: '2022-08-01',
-        end: '2022-12-01',
+        title: course.courseName ,
+        startTime: course.courseStartTime,
+        endTime: course.courseEndTime,
         daysOfWeek: [day2Num[course.courseWeeklyFirstLec], day2Num[course.courseWeeklySecondLec]],
-        Duration: '01:30:00'
       }
     })
-    // setEvents(INITIAL_EVENTS(coursesBucket))
     console.log(eventsList)
     setEvents(eventsList)
     return eventsList;
 
   }
 
-
   useEffect(() => {
     postRollNumDetails()
     getData();
     const currUser = JSON.parse(localStorage.getItem('STTP-user'))
-
     if (!currUser) {
       Navigate("/login")
     }
-
   }, [])
 
   useEffect(() => {
     eventsSetup();
-
   }, [coursesBucket])
 
   return (
     <div className='w-screen	h-screen flex justify-center	items-center flex-col'>
-
       <div className="w-1/2 ">
         <FullCalendar className="overflow-y-clip"
           headerToolbar={{
@@ -107,19 +91,19 @@ const DashBoard = () => {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
           }}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView="timeGridWeek"
-          // dateClick={handleDateClick}
+          plugins={[dayGridPlugin, timeGridPlugin]}
+          initialView="dayGridMonth"
           events={events}
           slotMinTime={'08:00:00'}
-          slotMaxTime={'20:00:00'}
-          // initialEvents={INITIAL_EVENTS}
-
-          slotDuration={'01:30:00'} 
-          // allDaySlot = {false}
-
+          slotMaxTime={'19:30:00'}
+          slotDuration={'00:30:00'} 
+          allDaySlot = {false}  
+          editable={true}
+          selectable={true}
+          selectMirror={true}
+          dayMaxEvents={true}
+          weekends={true} 
         />
-        {console.log(events)}
       </div>
     </div>
   )
@@ -127,4 +111,3 @@ const DashBoard = () => {
 
 export default DashBoard
 
-// initialView: 'timeGridWeek',
