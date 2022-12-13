@@ -6,19 +6,18 @@ import Login from "./pages/auth/Login.js"
 import Courses from "./pages/Courses.js";
 import './index.css'
 import DashBoard from "./pages/DashBoard.js";
-
 function App() {
   return (
     
-    <div>
-      <Routes>
+    // <div>
+    <Routes>
         <Route path="/" element={<LandingPage/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<DashBoard/>} />
         <Route path="/courseselection" element={<Courses/>} />
-      </Routes>
-    </div>
+      </Routes> 
+    // </div>
   )
 }
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const connectToDataBase = () => {
     mongoose
-        .connect('mongodb://localhost:27017/sttp', {
+        .connect('mongodb+srv://im3dabasia:3387@cluster0.tm0gjgr.mongodb.net/STTP?retryWrites=true&w=majority', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
 

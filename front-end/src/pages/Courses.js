@@ -10,6 +10,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { notify } from './auth/Register';
 import 'tw-elements';
+import DropDown from '../components/DropDown';
+import Button from '../components/Button';
 
 const Courses = () => {
 
@@ -29,7 +31,10 @@ const Courses = () => {
   const [courseDayTwo, setCourseDayTwo] = useState("Monday");
   const [courseStartTime, setCourseStartTime] = useState("");
   const [courseEndTime, setCourseEndTime] = useState("");
-
+  const [days, SetDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+  const [startTimes, setStartTimes] = useState(['08:00', '09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30'])
+  const [endTimes, setEndTimes] = useState(['09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00'])
+  const [validator, setValidator] = useState([])
 
   const clearForm = () => {
     setCourseName("")
@@ -39,7 +44,7 @@ const Courses = () => {
     setCourseDayTwo("Monday")
     setCourseId("")
     setCourseStartTime("08:00")
-    setCourseEndTime("09:30")
+    setCourseEndTime("")
   }
 
   const handleSubmit = (obj) => {
@@ -50,8 +55,12 @@ const Courses = () => {
       notify("Input Course Name");
       return false
     }
-    if (courseStartTime.length === 0 || courseEndTime.length === 0) {
-      notify("Input Course Time");
+    if (courseStartTime === "12:30" || courseEndTime === "13:00") {
+      notify("Cannot take course during lunch time!");
+      return false;
+    }
+    if (courseEndTime.length === 0) {
+      notify("Enter the End time");
       return false;
     }
     if (courseDayOne.length === 0 || courseDayTwo.length === 0) {
@@ -105,10 +114,20 @@ const Courses = () => {
   }
 
   const cancelUpdateCourse = async (event) => {
+    event.preventDefault();
     setEditOn(false)
     clearForm()
 
   }
+
+  const goToDashBoard = async (event) => {
+    event.preventDefault();
+    clearForm() 
+    navigate("/dashboard")
+
+  }
+
+
 
   const courseSubmit = async (event) => {
     event.preventDefault();
@@ -191,6 +210,7 @@ const Courses = () => {
     getCoursesData()
 
   }
+
   const editCourse = async (id) => {
 
     const data = await axios.get(`http://www.localhost:5000/api/courseselection/id/${id}`)
@@ -215,6 +235,26 @@ const Courses = () => {
     }
   }
 
+  const checkStrTime = (time) => {
+    return courseStartTime === time
+  }
+
+  const handleCourseStartTime = (val) => {
+    setCourseStartTime(val)
+  }
+
+  const handleCourseEndTime = (val) => {
+    setCourseEndTime(val)
+  }
+
+  const handleCourseDayOne = (val) => {
+    setCourseDayOne(val)
+  }
+
+  const handleCourseDayTwo = (val) => {
+    setCourseDayTwo(val)
+  }
+
   useEffect(() => {
     const currUser = JSON.parse(localStorage.getItem('STTP-user'))
     if (!currUser) {
@@ -228,16 +268,33 @@ const Courses = () => {
     getCoursesData();
   }, [apiCall])
 
+  useEffect(() => {
+    const checkArr = ['09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00']
+
+    const strIndex = checkArr.findIndex(checkStrTime)
+    const tempEndTime = checkArr.filter((time) => {
+      const tempInx = checkArr.findIndex((item) => {
+        return item === time
+      })
+
+      return tempInx > strIndex
+    })
+    setEndTimes(tempEndTime)
+    setCourseEndTime(tempEndTime[0])
+    // setEndTimes(()=>{})
+  }, [courseStartTime])
+
   return (
-    <div className='w-screen h-screen flex flex-col justify-center items-center'>
-      <h1 className='mb-2 text-5xl'> Course Selection</h1>
-      <h3 className='mb-8 text-2xl'> Input your courses</h3>
+    <div className='w-screen h-screen flex flex-col justify-start items-center overflow-x-hidden '>
+      <div className='w-full  flex flex-col justify-center items-center'>
+        <h1 className='text-5xl'> Course Selection</h1>
+        <h3 className='text-2xl' > Input your courses</h3>
+      </div>
       <div className='w-full h-full flex flex-row justify-center items-center'>
-        <div className='w-1/2 h-full flex flex-col justify-center  items-center'>
+        <div className='w-1/2 h-full flex flex-col justify-center items-center'>
 
           <form className="w-full max-w-lg">
-            <div className
-              ="flex flex-wrap -mx-3 mb-6">
+            <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label className
                   ="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-course-name">
@@ -258,83 +315,20 @@ const Courses = () => {
                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-course-dscription">
                   Course Description
                 </label>
-                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-course-description" type="text" placeholder="Add some description down here" value={courseDescription} onChange={(e) => setCourseDescription(e.target.value)} />
+                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-course-description" type="text" placeholder="Add some description down here" value={courseDescription} onChange={(e) => {
+                  setCourseDescription(e.target.value)
+                }
+                } />
                 <p className="text-gray-600 text-xs italic">Not as important!</p>
               </div>
             </div>
 
             <div className="flex flex-wrap -mx-3 mb-2">
-              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-course-name">
-                  Course Start Time
-                </label>
-                <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" type="text" value={courseStartTime} placeholder="Enter Course Start Time" onChange={(e) => setCourseStartTime(e.target.value)} >
-                  <option>08:00</option>
-                  <option>09:30</option>
-                  <option>11:00</option>
-                  <option>12:30</option>
-                  <option>13:00</option>
-                  <option>14:30</option>
-                  <option>16:00</option>
-                  <option>17:30</option>
-                </select>
-              </div>
 
-              <div className="w-full md:w-1/2 px-3">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-faculty-name">
-                  Course End Time
-                </label>
-                <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" type="text" value={courseEndTime} placeholder="Enter Course End Time" onChange={(e) => setCourseEndTime(e.target.value)} >
-                  <option>09:30</option>
-                  <option>11:00</option>
-                  <option>12:30</option>
-                  <option>13:00</option>
-                  <option>14:30</option>
-                  <option>16:00</option>
-                  <option>17:30</option>
-                  <option>19:00</option>
-                </select>
-              </div>
-
-              <div className="w-full md:w-1/2 px-3 my-6 md:mb-0">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-state">
-                  First Lecture Day
-                </label>
-                <div className="relative">
-                  <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" value={courseDayOne} onChange={(e) => setCourseDayOne(e.target.value)}>
-                    <option>Monday</option>
-                    <option>Tuesday</option>
-                    <option>Wednesday</option>
-                    <option>Thursday</option>
-                    <option>Friday</option>
-                    <option>Saturday</option>
-                    <option>Sunday</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="w-full md:w-1/2 px-3 my-6 md:mb-0">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-state">
-                  Second Lecture Day
-                </label>
-                <div className="relative">
-                  <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state" value={courseDayTwo} onChange={(e) => setCourseDayTwo(e.target.value)}>
-                    <option>Monday</option>
-                    <option>Tuesday</option>
-                    <option>Wednesday</option>
-                    <option>Thursday</option>
-                    <option>Friday</option>
-                    <option>Saturday</option>
-                    <option>Sunday</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                  </div>
-                </div>
-              </div>
+              <DropDown label="Course Start Time" arr={startTimes} value={courseStartTime} onChange={handleCourseStartTime} />
+              <DropDown label="Course End Time" arr={endTimes} value={courseEndTime} onChange={handleCourseEndTime} />
+              <DropDown label="First Lecture Day" arr={days} value={courseDayOne} onChange={handleCourseDayOne} />
+              <DropDown label="Second Lecture Day" arr={days} value={courseDayTwo} onChange={handleCourseDayTwo} />
 
             </div>
             <div className='w-full flex my-6 justify-center items-center'>
@@ -348,41 +342,42 @@ const Courses = () => {
                   </button>
                 </>
               ) : (
-                <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={courseSubmit}>
-                  Add
-                </button>)}
+                <>
+                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={courseSubmit}>
+                    Add
+                  </button>
+                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold mx-4 py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={goToDashBoard}>
+                    View Time Table
+                  </button>
+                </>
+              )}
             </div>
           </form>
         </div>
 
-        {selectedCourses.length > 0 ? (<div className='w-1/2 h-full flex flex-row flex-wrap	 items-center justify-center gap-x-6'>
-          {selectedCourses.map((item) => {
+        {selectedCourses.length > 0 ? (
+          <div className='w-1/2 h-full flex flex-row content-evenly flex-wrap items-center justify-center gap-x-3 overflow-x-auto overflow-y-auto'>
+            {selectedCourses.map((item) => {
 
-            const { _id, courseName, courseFaculty, courseDescription, courseStartTime, courseEndTime, courseWeeklyFirstLec, courseWeeklySecondLec } = item
+              const { _id, courseName, courseFaculty, courseDescription, courseStartTime, courseEndTime, courseWeeklyFirstLec, courseWeeklySecondLec } = item
 
-            return (
-              <div className="block p-6 rounded-lg shadow-2xl bg-white max-w-sm ">
-                <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">Course Name: {courseName}</h5>
-                <p className="text-gray-700 text-basec">
-                  Description: {courseDescription}
-                </p>
-                <p className="text-gray-700 text-basec">
-                  Faculty Name: {courseFaculty}
-                </p>
-                <h6>Days: {courseWeeklyFirstLec} {courseWeeklySecondLec}</h6>
-                <h6 className='mb-2'>Time: {courseStartTime} {courseEndTime}</h6>
+              return (
+                <div className="block p-6 rounded-lg shadow-2xl bg-white w-1/4 h-1/4	">
+                  <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">Course Name: {courseName}</h5>
+                  <h6>Days: {courseWeeklyFirstLec} {courseWeeklySecondLec}</h6>
+                  <h6 className='mb-2'>Time: {courseStartTime} {courseEndTime}</h6>
 
-                <button type="button" className="opacity-90 inline-block  px-3 py-1.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { editCourse(_id) }}>
-                  <EditIcon />
-                </button>
+                  <button type="button" className="opacity-90 inline-block  px-1 py-1  bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { editCourse(_id) }}>
+                    <EditIcon />
+                  </button>
 
-                <button type="button" className="opacity-90 inline-block px-3 py-1.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { deleteCourse(_id) }}>
-                  <DeleteIcon />
-                </button>
-              </div>
-            )
-          })}
-        </div>) : null}
+                  <button type="button" className="opacity-90 inline-block px-1 py-1  bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { deleteCourse(_id) }}>
+                    <DeleteIcon />
+                  </button>
+                </div>
+              )
+            })}
+          </div>) : null}
       </div >
       <ToastContainer />
     </div >
