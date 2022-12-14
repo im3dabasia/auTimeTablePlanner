@@ -1,14 +1,14 @@
 import React from 'react'
 import axios from 'axios'
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
+import { registerRoute } from '../../utils/ApiRoutes'
 
+// others
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const notify = (inputData) => toast(`${inputData} !`);
 const Register = () => {
-
-
   const navigate = useNavigate();
 
   const myStyle = {
@@ -17,93 +17,58 @@ const Register = () => {
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     filter: "hue-rotate(150deg)"
-
   };
 
   const handleSubmit = (obj) => {
-
     const { rollNum, name, passWord } = obj;
-
     if (rollNum.length !== 8) {
-      console.log("Roll number wrong")
       notify("roll number is not 8 digits long");
       return false
     }
     if (name.length === 0) {
-      console.log("name wrong ")
-
       notify("name is not valid");
-
-
       return false;
     }
     if (passWord.length === 0 || passWord.length < 4) {
-      console.log("Password wrong")
-
       notify("password is not valid");
-
-
       return false;
     }
-    return true;
 
+    return true;
   }
 
   const registerSubmit = async (event) => {
     event.preventDefault();
     const { rollNum, name, passWord } = event.target;
-
     const obj = { rollNum: rollNum.value, name: name.value, passWord: passWord.value };
-
     if (handleSubmit(obj)) {
-
-      const data = await axios.post('http://www.localhost:5000/api/register', obj)    
+      const { data } = await axios.post(registerRoute, obj)
         .then(function (response) {
-          console.log(response)
           return response;
         })
         .catch(function (error) {
           console.log(error);
         });
-        console.log(data)
 
-        const newUserData =  await data.data.userDetails
-
-      if (data.data.nextPage) {
-
-        localStorage.setItem('STTP-user',JSON.stringify(newUserData))
-        if(data.data.userExists) {
-          navigate("/dashboard")
-        }else{
-          navigate("/courseselection")
-        }
-
-      } else {
-
-        notify("roll number already exists");
-
-        setTimeout(() =>{
-          navigate("/login")
-
-        },3000)
+      if (data.status) {
+        localStorage.setItem(
+          "STTP-user",
+          JSON.stringify(data.newUser.rollNum)
+        );
+        navigate("/courseselection");
+      } else if (!data.status) {
+        notify(data.msg);
       }
-
-
     }
     else {
-      console.log("error");
+      notify("Error");
     }
-
-
-  }
-  
+  };
   return (
     <div style={myStyle} className=' flex flex-col justify-center	 items-center	 content-center h-screen	w-screen'>
-
       <h1 className='font-medium leading-tight text-5xl mt-0 mb-8'>Student Registration </h1>
       <form onSubmit={registerSubmit}>
         <div className='flex  justify-center content-center' >
-
           <div className="mb-3 xl:w-96">
             <label forhtml="rollNum" className="form-label inline-block mb-2 text-gray-700"
             >Roll Number
@@ -115,7 +80,6 @@ const Register = () => {
               id="rollNum"
               placeholder="Input your roll number here"
             />
-
             <label forhtml="name" className="form-label inline-block my-2 text-gray-700"
             >Full Name
             </label>
@@ -126,8 +90,6 @@ const Register = () => {
               id="name"
               placeholder="Input your name here"
             />
-
-
             <label forhtml="passWord" className="form-label inline-block my-2 text-gray-700"
             >Password
             </label>
@@ -138,10 +100,7 @@ const Register = () => {
               id="passWord"
               placeholder="Password input"
             />
-
-
             <div className="my-6 xl:w-96">
-
               <input
                 type="submit"
                 className="form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700
@@ -150,14 +109,10 @@ const Register = () => {
                 placeholder="Register"
               />
             </div>
-
           </div>
         </div>
-
-
       </form>
       <ToastContainer />
-
     </div>
   )
 }

@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-// icons
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { notify } from './auth/Register';
 import 'tw-elements';
+
+// Components and Routes
 import DropDown from '../components/DropDown';
 import Button from '../components/Button';
+import { courseSelectionRoute } from '../utils/ApiRoutes'
+// import Loading from '../components/Loading';
+
+// others
+import { ToastContainer, toast } from 'react-toastify';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import 'react-toastify/dist/ReactToastify.css';
+import { notify } from './auth/Register';
 
 const Courses = () => {
-
   // helper
   const [apiCall, setApiCall] = useState(false);
   const [editOn, setEditOn] = useState(false);
@@ -34,7 +36,6 @@ const Courses = () => {
   const [days, SetDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
   const [startTimes, setStartTimes] = useState(['08:00', '09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30'])
   const [endTimes, setEndTimes] = useState(['09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00'])
-  const [validator, setValidator] = useState([])
 
   const clearForm = () => {
     setCourseName("")
@@ -56,7 +57,7 @@ const Courses = () => {
       return false
     }
     if (courseStartTime === "12:30" || courseEndTime === "13:00") {
-      notify("Cannot take course during lunch time!");
+      notify("Cannot take course during lunch time");
       return false;
     }
     if (courseEndTime.length === 0) {
@@ -90,8 +91,7 @@ const Courses = () => {
       data: obj,
     }
     if (handleSubmit(obj)) {
-
-      const data = await axios.patch(`http://www.localhost:5000/api/courseselection/id/${courseId}`, objectToSend)
+      const data = await axios.patch(`${courseSelectionRoute}/id/${courseId}`, objectToSend)
         .then(function (response) {
           return response;
         })
@@ -110,7 +110,6 @@ const Courses = () => {
     setEditOn(false)
     setApiCall(false)
 
-
   }
 
   const cancelUpdateCourse = async (event) => {
@@ -122,18 +121,15 @@ const Courses = () => {
 
   const goToDashBoard = async (event) => {
     event.preventDefault();
-    clearForm() 
+    clearForm()
     navigate("/dashboard")
 
   }
-
-
 
   const courseSubmit = async (event) => {
     event.preventDefault();
     setApiCall(true)
     const userInfo = localStorage.getItem('STTP-user');
-    let userRollNumber = JSON.parse(userInfo).rollNum;
 
     const obj = {
       courseName: courseName,
@@ -146,12 +142,11 @@ const Courses = () => {
     }
     const objectToSend = {
       data: obj,
-      rollNum: userRollNumber
+      rollNum: userInfo
     }
 
     if (handleSubmit(obj)) {
-
-      const data = await axios.post('http://www.localhost:5000/api/courseselection', objectToSend)
+      const data = await axios.post(courseSelectionRoute, objectToSend)
         .then(function (response) {
           return response;
         })
@@ -159,7 +154,6 @@ const Courses = () => {
 
           console.log(error);
         });
-
     }
     else {
       console.log("error")
@@ -168,7 +162,7 @@ const Courses = () => {
   }
 
   const getCoursesData = async () => {
-    const data = await axios.get('http://www.localhost:5000/api/courseselection')
+    const data = await axios.get(courseSelectionRoute)
       .then(function (response) {
         return response;
       })
@@ -177,19 +171,17 @@ const Courses = () => {
       });
     setSelectedCourses(data.data)
     clearForm()
-
   }
 
   const sendRollNumber = async () => {
     const userInfo = localStorage.getItem('STTP-user');
-    let userRollNumber = JSON.parse(userInfo).rollNum;
-
     const objectToSend = {
-      rollNum: userRollNumber
-
+      rollNum: userInfo
     }
-    const data = await axios.post('http://www.localhost:5000/api/courseselection/rollnumber', objectToSend)
+
+    const data = await axios.post(`${courseSelectionRoute}/rollnumber`, objectToSend)
       .then(function (response) {
+        getCoursesData()
         return response;
       })
       .catch(function (error) {
@@ -198,22 +190,18 @@ const Courses = () => {
   }
 
   const deleteCourse = async (id) => {
-
-    const data = await axios.delete(`http://www.localhost:5000/api/courseselection/id/${id}`)
+    const data = await axios.delete(`${courseSelectionRoute}/id/${id}`)
       .then(function (response) {
         return response;
       })
       .catch(function (error) {
         console.log(error);
       });
-
     getCoursesData()
-
   }
 
   const editCourse = async (id) => {
-
-    const data = await axios.get(`http://www.localhost:5000/api/courseselection/id/${id}`)
+    const data = await axios.get(`${courseSelectionRoute}/id/${id}`)
       .then(function (response) {
         return response;
       })
@@ -221,7 +209,6 @@ const Courses = () => {
         console.log(error);
       });
     const userData = data.data.data
-
     if (userData !== null) {
       setEditOn(true);
       setCourseId(userData._id)
@@ -261,7 +248,7 @@ const Courses = () => {
       navigate("/")
     }
     sendRollNumber();
-    getCoursesData()
+    // getCoursesData() 
   }, [])
 
   useEffect(() => {
@@ -270,29 +257,25 @@ const Courses = () => {
 
   useEffect(() => {
     const checkArr = ['09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00']
-
     const strIndex = checkArr.findIndex(checkStrTime)
     const tempEndTime = checkArr.filter((time) => {
       const tempInx = checkArr.findIndex((item) => {
         return item === time
       })
-
       return tempInx > strIndex
     })
     setEndTimes(tempEndTime)
     setCourseEndTime(tempEndTime[0])
-    // setEndTimes(()=>{})
   }, [courseStartTime])
 
   return (
-    <div className='w-screen h-screen flex flex-col justify-start items-center overflow-x-hidden '>
+    <div className='w-screen h-screen flex flex-col justify-start items-center '>
       <div className='w-full  flex flex-col justify-center items-center'>
-        <h1 className='text-5xl'> Course Selection</h1>
-        <h3 className='text-2xl' > Input your courses</h3>
+        <h1 className='text-5xl'>Course Selection</h1>
+        <h3 className='text-2xl'>Input your courses</h3>
       </div>
-      <div className='w-full h-full flex flex-row justify-center items-center'>
+      <div className='w-full  h-5/6 flex flex-row justify-center items-center'>
         <div className='w-1/2 h-full flex flex-col justify-center items-center'>
-
           <form className="w-full max-w-lg">
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -324,13 +307,12 @@ const Courses = () => {
             </div>
 
             <div className="flex flex-wrap -mx-3 mb-2">
-
               <DropDown label="Course Start Time" arr={startTimes} value={courseStartTime} onChange={handleCourseStartTime} />
               <DropDown label="Course End Time" arr={endTimes} value={courseEndTime} onChange={handleCourseEndTime} />
               <DropDown label="First Lecture Day" arr={days} value={courseDayOne} onChange={handleCourseDayOne} />
               <DropDown label="Second Lecture Day" arr={days} value={courseDayTwo} onChange={handleCourseDayTwo} />
-
             </div>
+
             <div className='w-full flex my-6 justify-center items-center'>
               {editOn ? (
                 <>
@@ -356,11 +338,10 @@ const Courses = () => {
         </div>
 
         {selectedCourses.length > 0 ? (
-          <div className='w-1/2 h-full flex flex-row content-evenly flex-wrap items-center justify-center gap-x-3 overflow-x-auto overflow-y-auto'>
+          <div className='w-1/2 h-max flex flex-row flex-wrap items-end justify-center gap-x-5 gap-y-5	'>
             {selectedCourses.map((item) => {
 
               const { _id, courseName, courseFaculty, courseDescription, courseStartTime, courseEndTime, courseWeeklyFirstLec, courseWeeklySecondLec } = item
-
               return (
                 <div className="block p-6 rounded-lg shadow-2xl bg-white w-1/4 h-1/4	">
                   <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">Course Name: {courseName}</h5>
@@ -370,7 +351,6 @@ const Courses = () => {
                   <button type="button" className="opacity-90 inline-block  px-1 py-1  bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { editCourse(_id) }}>
                     <EditIcon />
                   </button>
-
                   <button type="button" className="opacity-90 inline-block px-1 py-1  bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { deleteCourse(_id) }}>
                     <DeleteIcon />
                   </button>
@@ -385,4 +365,5 @@ const Courses = () => {
 }
 
 export default Courses
+
 
