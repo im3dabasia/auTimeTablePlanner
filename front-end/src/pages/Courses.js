@@ -31,11 +31,14 @@ const Courses = () => {
   const [facultyName, setFacultyName] = useState("");
   const [courseDayOne, setCourseDayOne] = useState("Monday");
   const [courseDayTwo, setCourseDayTwo] = useState("Monday");
-  const [courseStartTime, setCourseStartTime] = useState("");
-  const [courseEndTime, setCourseEndTime] = useState("");
+  const [courseStartTime, setCourseStartTime] = useState("08:00");
+  const [courseEndTime, setCourseEndTime] = useState("09:30");
   const [days, SetDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
   const [startTimes, setStartTimes] = useState(['08:00', '09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30'])
   const [endTimes, setEndTimes] = useState(['09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00'])
+  const [courseSet, setCourseSet] = useState([]);
+
+  let latestSet = [...courseSet]
 
   const clearForm = () => {
     setCourseName("")
@@ -46,6 +49,47 @@ const Courses = () => {
     setCourseId("")
     setCourseStartTime("08:00")
     setCourseEndTime("")
+  }
+
+  const checkClash = ({startTime,endTime,dayOne,dayTwo}) => {
+    const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
+
+    const stIndex = startTimes.indexOf(startTime)
+    const enIndex = startTimes.indexOf(endTime)
+    var timeIn = []
+    startTimes.forEach((time)=>{
+      const tempIndex = startTimes.indexOf(time)
+      if(tempIndex>=stIndex && tempIndex<enIndex){
+        const str1 = dayOne+time
+        const str2 = dayTwo+time
+        timeIn = [...timeIn, str1, str2]
+      }
+    })
+    console.log(latestSet)
+    const isClash = item => {
+      return latestSet.includes(item)
+    }
+
+    const tempSet = []
+    timeIn.forEach((str)=>{
+      const checkCl = isClash(str)
+      // console.log(checkCl)
+      if(!checkCl){
+        tempSet.push(str)
+      }
+    })
+
+
+    if(timeIn.length===tempSet.length){
+      latestSet = [...latestSet, ...tempSet]
+      console.log(latestSet)
+      setCourseSet(latestSet)
+      return true
+    }
+    else{
+      console.log(latestSet)
+      return false
+    }
   }
 
   const handleSubmit = (obj) => {
@@ -68,11 +112,19 @@ const Courses = () => {
       notify("Course Day Not Selected");
       return false;
     }
+    const clashResult = checkClash({startTime : courseStartTime, endTime : courseEndTime, dayOne :courseDayOne, dayTwo:courseDayTwo})
+    if(!clashResult){
+      notify("There is a clash between Courses");
+      return false;
+    }
     return true;
 
   }
 
   const updateCourse = async (event) => {
+    
+    
+
     event.preventDefault();
     setApiCall(true)
     const userInfo = localStorage.getItem('STTP-user');
@@ -112,12 +164,14 @@ const Courses = () => {
 
   }
 
-  const cancelUpdateCourse = async (event) => {
-    event.preventDefault();
-    setEditOn(false)
-    clearForm()
+  // const cancelUpdateCourse = async (event) => {
 
-  }
+  //   event.preventDefault();
+
+  //   setEditOn(false)
+  //   clearForm()
+
+  // }
 
   const goToDashBoard = async (event) => {
     event.preventDefault();
@@ -189,22 +243,12 @@ const Courses = () => {
       });
   }
 
-  const deleteCourse = async (id) => {
-    const data = await axios.delete(`${courseSelectionRoute}/id/${id}`)
-      .then(function (response) {
-        return response;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    getCoursesData()
-  }
-
   const editCourse = async (id) => {
+
     const data = await axios.get(`${courseSelectionRoute}/id/${id}`)
-      .then(function (response) {
-        return response;
-      })
+    .then(function (response) {
+      return response;
+    })
       .catch(function (error) {
         console.log(error);
       });
@@ -220,6 +264,80 @@ const Courses = () => {
       setCourseStartTime(userData.courseStartTime)
       setCourseEndTime(userData.courseEndTime)
     }
+    const {courseStartTime,courseEndTime,courseWeeklyFirstLec,courseWeeklySecondLec} = userData
+
+    const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
+
+    const stIndex = startTimes.indexOf(courseStartTime)
+    const enIndex = startTimes.indexOf(courseEndTime)
+    var timeIn = []
+    // var endTimes = []
+    startTimes.forEach((time)=>{
+      const tempIndex = startTimes.indexOf(time)
+      if(tempIndex>=stIndex && tempIndex<enIndex){
+        const str1 = courseWeeklyFirstLec+time
+        const str2 = courseWeeklySecondLec+time
+        timeIn = [...timeIn, str1, str2]
+      }
+    })
+    console.log(timeIn)
+    console.log(latestSet)
+  
+    latestSet = latestSet.filter((item)=>{
+      const tempCheck = timeIn.includes(item)
+      console.log(tempCheck)
+      return !tempCheck   
+    })
+    // console.log(`newSet ${newSet}`)
+    console.log(latestSet)
+    setCourseSet(latestSet)
+
+    console.log(userData)
+    return userData
+  }
+
+  const deleteCourse = async (id) => { 
+    
+    let temp = await editCourse(id)
+    setEditOn(false)
+
+    console.log(temp)
+    const {courseStartTime,courseEndTime,courseWeeklyFirstLec,courseWeeklySecondLec} = temp
+
+    const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
+
+    const stIndex = startTimes.indexOf(courseStartTime)
+    const enIndex = startTimes.indexOf(courseEndTime)
+    var timeIn = []
+    // var endTimes = []
+    startTimes.forEach((time)=>{
+      const tempIndex = startTimes.indexOf(time)
+      if(tempIndex>=stIndex && tempIndex<enIndex){
+        const str1 = courseWeeklyFirstLec+time
+        const str2 = courseWeeklySecondLec+time
+        timeIn = [...timeIn, str1, str2]
+      }
+    })
+    console.log(timeIn)
+    console.log(latestSet)
+  
+    latestSet = latestSet.filter((item)=>{
+      const tempCheck = timeIn.includes(item)
+      console.log(tempCheck)
+      return !tempCheck   
+    })
+    // console.log(`newSet ${newSet}`)
+    console.log(latestSet)
+    setCourseSet(latestSet)
+
+    const data = await axios.delete(`${courseSelectionRoute}/id/${id}`)
+      .then(function (response) {
+        return response;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    getCoursesData()
   }
 
   const checkStrTime = (time) => {
@@ -319,7 +437,7 @@ const Courses = () => {
                   <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 mx-2 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={updateCourse}>
                     Update
                   </button>
-                  <button className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 mx-2 border-b-4 border-gray-700 hover:border-gray-500 rounded" onClick={cancelUpdateCourse}>
+                  <button className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 mx-2 border-b-4 border-gray-700 hover:border-gray-500 rounded" onClick={updateCourse}>
                     Cancel
                   </button>
                 </>
