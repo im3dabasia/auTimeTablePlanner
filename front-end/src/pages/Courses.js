@@ -65,7 +65,6 @@ const Courses = () => {
         timeIn = [...timeIn, str1, str2]
       }
     })
-    console.log(latestSet)
     const isClash = item => {
       return latestSet.includes(item)
     }
@@ -73,21 +72,17 @@ const Courses = () => {
     const tempSet = []
     timeIn.forEach((str)=>{
       const checkCl = isClash(str)
-      // console.log(checkCl)
       if(!checkCl){
         tempSet.push(str)
       }
     })
 
-
     if(timeIn.length===tempSet.length){
       latestSet = [...latestSet, ...tempSet]
-      console.log(latestSet)
       setCourseSet(latestSet)
       return true
     }
     else{
-      console.log(latestSet)
       return false
     }
   }
@@ -95,7 +90,6 @@ const Courses = () => {
   const handleSubmit = (obj) => {
 
     const { courseName, courseFacultyName, courseDescription, courseStartTime, courseEndTime, courseDayOne, courseDayTwo } = obj;
-
     if (courseName.length === 0) {
       notify("Input Course Name");
       return false
@@ -118,12 +112,9 @@ const Courses = () => {
       return false;
     }
     return true;
-
   }
 
   const updateCourse = async (event) => {
-    
-    
 
     event.preventDefault();
     setApiCall(true)
@@ -163,15 +154,6 @@ const Courses = () => {
     setApiCall(false)
 
   }
-
-  // const cancelUpdateCourse = async (event) => {
-
-  //   event.preventDefault();
-
-  //   setEditOn(false)
-  //   clearForm()
-
-  // }
 
   const goToDashBoard = async (event) => {
     event.preventDefault();
@@ -280,19 +262,12 @@ const Courses = () => {
         timeIn = [...timeIn, str1, str2]
       }
     })
-    console.log(timeIn)
-    console.log(latestSet)
   
     latestSet = latestSet.filter((item)=>{
       const tempCheck = timeIn.includes(item)
-      console.log(tempCheck)
       return !tempCheck   
     })
-    // console.log(`newSet ${newSet}`)
-    console.log(latestSet)
     setCourseSet(latestSet)
-
-    console.log(userData)
     return userData
   }
 
@@ -301,9 +276,7 @@ const Courses = () => {
     let temp = await editCourse(id)
     setEditOn(false)
 
-    console.log(temp)
     const {courseStartTime,courseEndTime,courseWeeklyFirstLec,courseWeeklySecondLec} = temp
-
     const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
 
     const stIndex = startTimes.indexOf(courseStartTime)
@@ -318,16 +291,12 @@ const Courses = () => {
         timeIn = [...timeIn, str1, str2]
       }
     })
-    console.log(timeIn)
-    console.log(latestSet)
   
     latestSet = latestSet.filter((item)=>{
       const tempCheck = timeIn.includes(item)
-      console.log(tempCheck)
       return !tempCheck   
     })
-    // console.log(`newSet ${newSet}`)
-    console.log(latestSet)
+
     setCourseSet(latestSet)
 
     const data = await axios.delete(`${courseSelectionRoute}/id/${id}`)
@@ -483,5 +452,3 @@ const Courses = () => {
 }
 
 export default Courses
-
-
