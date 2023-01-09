@@ -1,13 +1,19 @@
-const StudentModel = require("../models/student.js");
-require("dotenv").config();
 const bcrypt = require("bcryptjs");
+require("dotenv").config();
+const StudentModel = require("../models/student.js");
 
-// global variables
+// Global Variable to store Roll number once user is logged in
 let studentRollNumber = 0
 
+// Post request: Create a new user 
 const registerUser = async (req, res) => {
     try {
-        let { rollNum, name, passWord } = await req.body;
+        let {
+            rollNum,
+            name,
+            passWord
+        } = await req.body;
+
         studentRollNumber = rollNum
         const userCheck = await StudentModel.findOne({ rollNum });
         if (userCheck)
@@ -16,6 +22,7 @@ const registerUser = async (req, res) => {
                 status: false,
             });
         const salt = await bcrypt.genSaltSync(10);
+
         //   const salt = process.env.BCRYPT_SALT;
         const encryptedPassword = await bcrypt.hashSync(passWord, salt);
         const newUser = await StudentModel.create({
@@ -24,6 +31,7 @@ const registerUser = async (req, res) => {
             passWord: encryptedPassword,
         });
         delete newUser.passWord;
+
         return res.status(201).json({ status: true, newUser });
     } catch (err) {
         res.status(400).json({
@@ -34,6 +42,7 @@ const registerUser = async (req, res) => {
     }
 };
 
+// Post request: Posts user login details
 const loginUser = async (req, res) => {
     let { rollNum, passWord } = await req.body;
     studentRollNumber = rollNum
@@ -54,6 +63,7 @@ const loginUser = async (req, res) => {
     }
 };
 
+// Get request: Send user Data
 const userDetails = async (req, res) => {
     let { rollNum } = await req.body;
     studentRollNumber = rollNum
@@ -61,11 +71,16 @@ const userDetails = async (req, res) => {
     if (!userData) {
         return res.json({ msg: "User does not exist", status: false });
     } else {
-        return res.json({ userProfile: userData});
+        return res.json({ userProfile: userData });
     }
 };
 
-module.exports = { registerUser, loginUser, studentRollNumber, userDetails };
+module.exports = {
+    registerUser,
+    loginUser,
+    studentRollNumber,
+    userDetails
+};
 
 
 
