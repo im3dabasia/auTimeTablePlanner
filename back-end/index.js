@@ -4,10 +4,10 @@ const userRouter = require("./routes/userRoute")
 const courseRouter = require('./routes/courseRoute');
 const calendarRouter = require('./routes/calendarRoute')
 
-// Connect to local DB
+// Connect to GLobal database
 connectDB();
 
-// App setup
+// Creating an instance of an express app
 const app = express();
 
 // Communicate with backend
