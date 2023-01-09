@@ -86,7 +86,7 @@ const Register = () => {
               className="form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700
                     bg-white bg-clip-padding border border-solid border-gray-300 rounded
                       transition ease-in-out m-0 focus:text-gray-700 focus:bg-white
-                    focus:border-blue-600 focus:outline-none"
+                    focus:bord`er-blue-600 focus:outline-none"
               id="rollNum"
               placeholder="Input your roll number here"
             />
@@ -129,6 +129,7 @@ const Register = () => {
           </div>
         </div>
       </form>
+      {/* To show notifications in the notification window */}
       <ToastContainer />
     </div>
   )

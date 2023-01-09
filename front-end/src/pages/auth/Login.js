@@ -56,7 +56,7 @@ const Login = () => {
     <div style={myStyle} className='bg-fixed flex flex-col justify-center	items-center content-center h-screen w-screen' >
       <h1 className='font-medium leading-tight text-5xl mt-0 mb-8'>Student Login </h1>
       <form onSubmit={loginSubmit} >
-        <div className='flex justify-center content-center' >
+        <div className='flex` justify-center content-center' >
           <div className="mb-3 xl:w-96">
             <label forhtml="rollNum" className="form-label inline-block mb-2 text-gray-700"
             >Roll Number
