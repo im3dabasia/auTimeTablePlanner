@@ -1,17 +1,26 @@
+/*
+    External Modules
+*/
 const express = require('express')
+const cors=require("cors");
+
 const connectDB = require("./config/db");
+
+/*
+    Local Modules Routers
+    App Routes
+*/
 const userRouter = require("./routes/userRoute")
 const courseRouter = require('./routes/courseRoute');
 const calendarRouter = require('./routes/calendarRoute')
 
-// Connect to GLobal database
+// Connect to Global database
 connectDB();
 
 // Creating an instance of an express app
 const app = express();
 
-// Communicate with backend
-const cors=require("cors");
+// Communicate with backend across all origins 
 const corsOptions ={
     origin:'*', 
     credentials:true,
@@ -22,13 +31,17 @@ const corsOptions ={
 app.use(cors(corsOptions))
 app.use(express.json())
 
-// Subrouters
+/*
+    Local Modules Routers
+    App Sub Routes
+*/
 app.use("/api", userRouter);
 app.use("/api", courseRouter);
 app.use("/api", calendarRouter);
 
 // Listening to port
-app.listen(5000, () => {
-    console.log(`Server is running on port ${"5000"}`); 
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`); 
 });
 
