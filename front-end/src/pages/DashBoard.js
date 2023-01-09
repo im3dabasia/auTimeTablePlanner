@@ -1,3 +1,4 @@
+// External Modules
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -5,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 // Components and Routes
 import {  dashboardRoute } from '../utils/ApiRoutes'
 
-// Others
+// Calendar Modules 
 import FullCalendar from '@fullcalendar/react' 
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -14,10 +15,11 @@ import interactionPlugin from '@fullcalendar/interaction'
 const DashBoard = () => {
   const Navigate = useNavigate();
 
-  // helper functions
+  // helper states
   const [coursesBucket, setCoursesBucket] = useState([])
   const [events, setEvents] = useState([])
 
+  // To map days from numbers
   const day2Num = {
     "Monday": 0,
     "Tuesday": 1,
@@ -28,6 +30,7 @@ const DashBoard = () => {
     "Sunday": 6
   }
 
+  // To get user courses data
   const getData = async (req, res) => {
     const tempData = await axios.get(dashboardRoute)
       .then(function (response) {
@@ -39,6 +42,7 @@ const DashBoard = () => {
     setCoursesBucket(tempData.data)
   }
 
+  // To post roll number details 
   const postRollNumDetails = async (event) => {
     // event.preventDefault();
     const rollNum = JSON.parse(localStorage.getItem('STTP-user'))
