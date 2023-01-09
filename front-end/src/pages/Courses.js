@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Courses = () => {
 
   const navigate = useNavigate();
-  
+
   // Helper states
   const [apiCall, setApiCall] = useState(false);
   const [editOn, setEditOn] = useState(false);
@@ -56,17 +56,17 @@ const Courses = () => {
   }
 
   // LOGIC For checking courses are clashing or not
-  const checkClash = ({startTime,endTime,dayOne,dayTwo}) => {
-    const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
+  const checkClash = ({ startTime, endTime, dayOne, dayTwo }) => {
+    const startTimes = ['08:00', '09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00']
 
     const stIndex = startTimes.indexOf(startTime)
     const enIndex = startTimes.indexOf(endTime)
     var timeIn = []
-    startTimes.forEach((time)=>{
+    startTimes.forEach((time) => {
       const tempIndex = startTimes.indexOf(time)
-      if(tempIndex>=stIndex && tempIndex<enIndex){
-        const str1 = dayOne+time
-        const str2 = dayTwo+time
+      if (tempIndex >= stIndex && tempIndex < enIndex) {
+        const str1 = dayOne + time
+        const str2 = dayTwo + time
         timeIn = [...timeIn, str1, str2]
       }
     })
@@ -75,32 +75,32 @@ const Courses = () => {
     }
 
     const tempSet = []
-    timeIn.forEach((str)=>{
+    timeIn.forEach((str) => {
       const checkCl = isClash(str)
-      if(!checkCl){
+      if (!checkCl) {
         tempSet.push(str)
       }
     })
 
-    if(timeIn.length===tempSet.length){
+    if (timeIn.length === tempSet.length) {
       latestSet = [...latestSet, ...tempSet]
       setCourseSet(latestSet)
       return true
     }
-    else{
+    else {
       return false
     }
   }
 
   const handleSubmit = (obj) => {
 
-    const { courseName, 
-        courseFacultyName,
-        courseDescription, 
-        courseStartTime, 
-        courseEndTime, 
-        courseDayOne, 
-        courseDayTwo } = obj;
+    const { courseName,
+      courseFacultyName,
+      courseDescription,
+      courseStartTime,
+      courseEndTime,
+      courseDayOne,
+      courseDayTwo } = obj;
 
     if (courseName.length === 0) {
       notify("Input Course Name");
@@ -118,11 +118,13 @@ const Courses = () => {
       notify("Course Day Not Selected");
       return false;
     }
-    const clashResult = checkClash({startTime : courseStartTime,
-        endTime : courseEndTime,
-        dayOne :courseDayOne,
-        dayTwo:courseDayTwo})
-    if(!clashResult){
+    const clashResult = checkClash({
+      startTime: courseStartTime,
+      endTime: courseEndTime,
+      dayOne: courseDayOne,
+      dayTwo: courseDayTwo
+    })
+    if (!clashResult) {
       notify("There is a clash between Courses");
       return false;
     }
@@ -242,9 +244,9 @@ const Courses = () => {
   const editCourse = async (id) => {
 
     const data = await axios.get(`${courseSelectionRoute}/id/${id}`)
-    .then(function (response) {
-      return response;
-    })
+      .then(function (response) {
+        return response;
+      })
       .catch(function (error) {
         console.log(error);
       });
@@ -260,59 +262,59 @@ const Courses = () => {
       setCourseStartTime(userData.courseStartTime)
       setCourseEndTime(userData.courseEndTime)
     }
-    const {courseStartTime,courseEndTime,courseWeeklyFirstLec,courseWeeklySecondLec} = userData
+    const { courseStartTime, courseEndTime, courseWeeklyFirstLec, courseWeeklySecondLec } = userData
 
-    const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
+    const startTimes = ['08:00', '09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00']
 
     const stIndex = startTimes.indexOf(courseStartTime)
     const enIndex = startTimes.indexOf(courseEndTime)
     var timeIn = []
     // var endTimes = []
-    startTimes.forEach((time)=>{
+    startTimes.forEach((time) => {
       const tempIndex = startTimes.indexOf(time)
-      if(tempIndex>=stIndex && tempIndex<enIndex){
-        const str1 = courseWeeklyFirstLec+time
-        const str2 = courseWeeklySecondLec+time
+      if (tempIndex >= stIndex && tempIndex < enIndex) {
+        const str1 = courseWeeklyFirstLec + time
+        const str2 = courseWeeklySecondLec + time
         timeIn = [...timeIn, str1, str2]
       }
     })
-  
-    latestSet = latestSet.filter((item)=>{
+
+    latestSet = latestSet.filter((item) => {
       const tempCheck = timeIn.includes(item)
-      return !tempCheck   
+      return !tempCheck
     })
     setCourseSet(latestSet)
     return userData
   }
 
-  const deleteCourse = async (id) => { 
-    
+  const deleteCourse = async (id) => {
+
     let temp = await editCourse(id)
     setEditOn(false)
 
-    const {courseStartTime, 
+    const { courseStartTime,
       courseEndTime,
       courseWeeklyFirstLec,
-      courseWeeklySecondLec} = temp
+      courseWeeklySecondLec } = temp
 
-    const startTimes = ['08:00','09:30','11:00','12:30','13:00','14:30','16:00','17:30','19:00']
+    const startTimes = ['08:00', '09:30', '11:00', '12:30', '13:00', '14:30', '16:00', '17:30', '19:00']
 
     const stIndex = startTimes.indexOf(courseStartTime)
     const enIndex = startTimes.indexOf(courseEndTime)
     var timeIn = []
 
-    startTimes.forEach((time)=>{
+    startTimes.forEach((time) => {
       const tempIndex = startTimes.indexOf(time)
-      if(tempIndex>=stIndex && tempIndex<enIndex){
-        const str1 = courseWeeklyFirstLec+time
-        const str2 = courseWeeklySecondLec+time
+      if (tempIndex >= stIndex && tempIndex < enIndex) {
+        const str1 = courseWeeklyFirstLec + time
+        const str2 = courseWeeklySecondLec + time
         timeIn = [...timeIn, str1, str2]
       }
     })
-  
-    latestSet = latestSet.filter((item)=>{
+
+    latestSet = latestSet.filter((item) => {
       const tempCheck = timeIn.includes(item)
-      return !tempCheck   
+      return !tempCheck
     })
 
     setCourseSet(latestSet)
@@ -392,45 +394,61 @@ const Courses = () => {
                   Course Name
                 </label>
                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3
-                          px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
-                   id="grid-course-name"
-                   type="text" 
-                   value={courseName} 
-                   placeholder="Enter Course Name" 
-                   onChange={(e) => setCourseName(e.target.value)} />
+                          px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  id="grid-course-name"
+                  type="text"
+                  value={courseName}
+                  placeholder="Enter Course Name"
+                  onChange={(e) => setCourseName(e.target.value)} />
               </div>
               <div className="w-full md:w-1/2 px-3">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" 
-                    htmlFor="grid-faculty-name">
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="grid-faculty-name">
                   Faculty Name
                 </label>
                 <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                         border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white
-                        focus:border-gray-500" 
-                    id="grid-faculty-name" 
-                    type="text" 
-                    value={facultyName} 
-                    placeholder="Enter Faculty Name" 
-                    onChange={(e) => setFacultyName(e.target.value)} />
+                        focus:border-gray-500"
+                  id="grid-faculty-name"
+                  type="text"
+                  value={facultyName}
+                  placeholder="Enter Faculty Name"
+                  onChange={(e) => setFacultyName(e.target.value)} />
               </div>
             </div>
 
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-course-dscription">
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="grid-course-dscription">
                   Course Description
                 </label>
-                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-course-description" type="text" placeholder="Add some description down here" value={courseDescription} onChange={(e) => {
-                  setCourseDescription(e.target.value)
-                }
-                } />
+                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
+                        border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none
+                        focus:bg-white focus:border-gray-500"
+                  id="grid-course-description"
+                  type="text"
+                  placeholder="Add some description down here"
+                  value={courseDescription}
+                  onChange={(e) => { setCourseDescription(e.target.value) }
+                  } />
                 <p className="text-gray-600 text-xs italic">Not as important!</p>
               </div>
             </div>
 
             <div className="flex flex-wrap -mx-3 mb-2">
-              <DropDown label="Course Start Time" arr={startTimes} value={courseStartTime} onChange={handleCourseStartTime} />
-              <DropDown label="Course End Time" arr={endTimes} value={courseEndTime} onChange={handleCourseEndTime} />
+              <DropDown
+                label="Course Start Time"
+                arr={startTimes}
+                value={courseStartTime}
+                onChange={handleCourseStartTime}
+              />
+              <DropDown
+                label="Course End Time"
+                arr={endTimes}
+                value={courseEndTime}
+                onChange={handleCourseEndTime}
+              />
               <DropDown label="First Lecture Day" arr={days} value={courseDayOne} onChange={handleCourseDayOne} />
               <DropDown label="Second Lecture Day" arr={days} value={courseDayTwo} onChange={handleCourseDayTwo} />
             </div>
