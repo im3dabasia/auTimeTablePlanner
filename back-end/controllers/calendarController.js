@@ -5,7 +5,9 @@ let loggedInRollNumber = 0;
 
 // Send calendar information based on the student roll number.
 const studentCalendarInfo = async (req, res) => {
-    let data = await CourseModel.find({studentRollNum : loggedInRollNumber})
+    let data = await CourseModel.find({
+      studentRollNum : loggedInRollNumber
+    })
     if(data != null ){
       return res.status(200).json(data)
     }
