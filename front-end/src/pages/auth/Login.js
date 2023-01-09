@@ -53,11 +53,10 @@ const Login = () => {
   };
 
   return (
-    <div style={myStyle} className='bg-fixed flex flex-col justify-center	 items-center	 content-center h-screen	w-screen' >
-      {/* <img src="./bg-auth.png"></img> */}
+    <div style={myStyle} className='bg-fixed flex flex-col justify-center	items-center content-center h-screen w-screen' >
       <h1 className='font-medium leading-tight text-5xl mt-0 mb-8'>Student Login </h1>
       <form onSubmit={loginSubmit} >
-        <div className='flex  justify-center content-center' >
+        <div className='flex justify-center content-center' >
           <div className="mb-3 xl:w-96">
             <label forhtml="rollNum" className="form-label inline-block mb-2 text-gray-700"
             >Roll Number
@@ -65,7 +64,9 @@ const Login = () => {
             <input
               type="number"
               className="form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700
-              bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                bg-white bg-clip-padding border border-solid border-gray-300 rounded transition 
+                  ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 
+                  focus:outline-none"
               id="rollNum"
               placeholder="Input your roll number here"
             />
@@ -76,7 +77,9 @@ const Login = () => {
             <input
               type="password"
               className="form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700
-              bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                bg-white bg-clip-padding border border-solid border-gray-300 rounded transition 
+                  ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 
+                  focus:outline-none"
               id="passWord"
               placeholder="Password input"
             />
@@ -85,7 +88,10 @@ const Login = () => {
               <input
                 type="submit"
                 className="form-control block w-full px-3 py-1.5 text-base font-normal text-white
-                bg-blue-500 hover:bg-blue-700 g-clip-padding border border-solid border-gray-300 rounded   m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  duration-300"
+                  bg-blue-500 hover:bg-blue-700 g-clip-padding border border-solid border-gray-300 
+                    rounded   m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 
+                    focus:outline-none transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  
+                    duration-300"
                 id="exampleText0"
                 placeholder="Login"
               />
