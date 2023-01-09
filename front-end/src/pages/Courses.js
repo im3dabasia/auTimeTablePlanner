@@ -389,12 +389,14 @@ const Courses = () => {
           <form className="w-full max-w-lg">
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label className
-                  ="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-course-name">
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  htmlFor="grid-course-name">
                   Course Name
                 </label>
-                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3
-                          px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                <input
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3
+                      px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                   id="grid-course-name"
                   type="text"
                   value={courseName}
@@ -402,11 +404,13 @@ const Courses = () => {
                   onChange={(e) => setCourseName(e.target.value)} />
               </div>
               <div className="w-full md:w-1/2 px-3">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-faculty-name">
                   Faculty Name
                 </label>
-                <input className="appearance-none block w-full bg-gray-200 text-gray-700 border 
+                <input
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border 
                         border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white
                         focus:border-gray-500"
                   id="grid-faculty-name"
@@ -419,7 +423,8 @@ const Courses = () => {
 
             <div className="flex flex-wrap -mx-3 mb-6">
               <div className="w-full px-3">
-                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                <label
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   htmlFor="grid-course-dscription">
                   Course Description
                 </label>
@@ -449,26 +454,44 @@ const Courses = () => {
                 value={courseEndTime}
                 onChange={handleCourseEndTime}
               />
-              <DropDown label="First Lecture Day" arr={days} value={courseDayOne} onChange={handleCourseDayOne} />
-              <DropDown label="Second Lecture Day" arr={days} value={courseDayTwo} onChange={handleCourseDayTwo} />
+              <DropDown
+                label="First Lecture Day"
+                arr={days}
+                value={courseDayOne}
+                onChange={handleCourseDayOne}
+              />
+              <DropDown
+                label="Second Lecture Day"
+                arr={days}
+                value={courseDayTwo}
+                onChange={handleCourseDayTwo}
+              />
             </div>
 
             <div className='w-full flex my-6 justify-center items-center'>
               {editOn ? (
                 <>
-                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 mx-2 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={updateCourse}>
+                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold 
+                              py-2 px-4 mx-2 border-b-4 border-red-700 hover:border-red-500 rounded"
+                    onClick={updateCourse}>
                     Update
                   </button>
-                  <button className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 px-4 mx-2 border-b-4 border-gray-700 hover:border-gray-500 rounded" onClick={updateCourse}>
+                  <button className="bg-gray-500 hover:bg-gray-400 text-white font-bold py-2 
+                              px-4 mx-2 border-b-4 border-gray-700 hover:border-gray-500 rounded"
+                    onClick={updateCourse}>
                     Cancel
                   </button>
                 </>
               ) : (
                 <>
-                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={courseSubmit}>
+                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 
+                              border-b-4 border-red-700 hover:border-red-500 rounded"
+                    onClick={courseSubmit}>
                     Add
                   </button>
-                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold mx-4 py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" onClick={goToDashBoard}>
+                  <button className="bg-red-500 hover:bg-red-400 text-white font-bold mx-4 py-2
+                              px-4 border-b-4 border-red-700 hover:border-red-500 rounded"
+                    onClick={goToDashBoard}>
                     View Time Table
                   </button>
                 </>
@@ -478,20 +501,44 @@ const Courses = () => {
         </div>
 
         {selectedCourses.length > 0 ? (
-          <div className='w-1/2 h-max flex flex-row flex-wrap items-end justify-center gap-x-5 gap-y-5	'>
+          <div className='w-1/2 h-max flex flex-row flex-wrap items-end justify-center gap-x-5 gap-y-5'>
             {selectedCourses.map((item) => {
 
-              const { _id, courseName, courseFaculty, courseDescription, courseStartTime, courseEndTime, courseWeeklyFirstLec, courseWeeklySecondLec } = item
+              const { _id,
+                courseName,
+                courseFaculty,
+                courseDescription,
+                courseStartTime,
+                courseEndTime,
+                courseWeeklyFirstLec,
+                courseWeeklySecondLec } = item
+
               return (
-                <div className="block p-6 rounded-lg shadow-2xl bg-white w-1/4 h-1/4	">
-                  <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">Course Name: {courseName}</h5>
+                <div className="block p-6 rounded-lg shadow-2xl bg-white w-1/4 h-1/4">
+                  <h5 className="text-gray-900 text-xl leading-tight font-medium mb-2">
+                    Course Name: {courseName}
+                  </h5>
                   <h6>Days: {courseWeeklyFirstLec} {courseWeeklySecondLec}</h6>
                   <h6 className='mb-2'>Time: {courseStartTime} {courseEndTime}</h6>
 
-                  <button type="button" className="opacity-90 inline-block  px-1 py-1  bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { editCourse(_id) }}>
+                  <button
+                    type="button"
+                    className="opacity-90 inline-block  px-1 py-1  bg-red-600
+                     text-white font-medium text-xs leading-tight uppercase rounded shadow-md
+                     hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg 
+                     focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition
+                      duration-150 ease-in-out mx-2"
+                    onClick={() => { editCourse(_id) }}>
                     <EditIcon />
                   </button>
-                  <button type="button" className="opacity-90 inline-block px-1 py-1  bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out mx-2" onClick={() => { deleteCourse(_id) }}>
+                  <button
+                    type="button"
+                    className="opacity-90 inline-block px-1 py-1  bg-red-600
+                      text-white font-medium text-xs leading-tight uppercase rounded shadow-md
+                      hover:bg-red-500 hover:shadow-lg focus:bg-red-700 focus:shadow-lg 
+                        focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition 
+                        duration-150 ease-in-out mx-2"
+                    onClick={() => { deleteCourse(_id) }}>
                     <DeleteIcon />
                   </button>
                 </div>
