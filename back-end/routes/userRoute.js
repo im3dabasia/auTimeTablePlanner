@@ -9,6 +9,5 @@ userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
 userRouter.post("/userdetails", userDetails);
 
-
 module.exports = userRouter;
 
