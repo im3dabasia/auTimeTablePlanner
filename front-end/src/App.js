@@ -9,7 +9,6 @@ import DashBoard from "./pages/DashBoard.js";
 function App() {
   return (
     
-    // <div>
     <Routes>
         <Route path="/" element={<LandingPage/>} />
         <Route path="/register" element={<Register />} />
@@ -17,7 +16,6 @@ function App() {
         <Route path="/dashboard" element={<DashBoard/>} />
         <Route path="/courseselection" element={<Courses/>} />
       </Routes> 
-    // </div>
   )
 }
 
