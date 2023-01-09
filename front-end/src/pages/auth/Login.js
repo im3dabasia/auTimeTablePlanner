@@ -1,9 +1,10 @@
+// External Modules
 import React from 'react'
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
-
-// others
 import { ToastContainer, toast } from 'react-toastify';
+
+// Local Modules
 import { loginRoute } from '../../utils/ApiRoutes'
 import { notify } from './Register';
 
@@ -13,7 +14,10 @@ const Login = () => {
   const loginSubmit = async (event) => {
     event.preventDefault();
     const { rollNum, passWord } = await event.target;
-    const obj = { rollNum: rollNum.value, passWord: passWord.value };
+    const obj = { 
+      rollNum: rollNum.value,
+      passWord: passWord.value 
+    };
 
     if ((obj)) {
       const { data } = await axios.post(loginRoute, obj)
@@ -33,7 +37,6 @@ const Login = () => {
       }
       else {
         notify(data.msg);
-
       }
     } 
     else {
